@@ -1,7 +1,6 @@
 package com.example.samplemvvm1;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +13,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.samplemvvm1.databinding.ActivityMainBinding;
 import com.example.samplemvvm1.model.Book;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityClickHandlers mainActivityClickHandlers;
     private Category selectedCategory;
     private ArrayList<Category> categoryArrayList = new ArrayList<>();
+    private ArrayList<Book> bookArrayList = new ArrayList<>();
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<Category> categories) {
                 categoryArrayList.clear();
                 categoryArrayList.addAll(categories);
-                for (Category c : categories) {
-                    Log.d(this.getClass().getName(), c.getCategoryName());
-                }
-
                 showSpinner();
-            }
-        });
-        mainActivityViewModel.getAllBooks(3).observe(this, new Observer<List<Book>>() {
-            @Override
-            public void onChanged(List<Book> books) {
-                for (Book b : books) {
-                    Log.d(this.getClass().getName(), b.getBookName());
-                }
             }
         });
     }
@@ -70,6 +61,27 @@ public class MainActivity extends AppCompatActivity {
         arrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         activityMainBinding.setSpinnerAdapter(arrayAdapter);
 
+    }
+
+    private void showRecyclerBook() {
+        recyclerView = activityMainBinding.secondaryLayout.recycler;
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+
+        BookAdapter bookAdapter = new BookAdapter();
+        recyclerView.setAdapter(bookAdapter);
+        bookAdapter.setBooks(bookArrayList);
+    }
+
+    private void loadBooksArrayList(int categoryId) {
+        mainActivityViewModel.getAllBooks(categoryId).observe(this, new Observer<List<Book>>() {
+            @Override
+            public void onChanged(List<Book> books) {
+                bookArrayList.clear();
+                bookArrayList.addAll(books);
+                showRecyclerBook();
+            }
+        });
     }
 
     @Override
@@ -98,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
             selectedCategory = (Category) parent.getItemAtPosition(pos);
             String message = " id is " + selectedCategory.getId() + "\n name is " + selectedCategory.getCategoryName();
             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+
+            loadBooksArrayList(selectedCategory.getId());
         }
     }
 }
