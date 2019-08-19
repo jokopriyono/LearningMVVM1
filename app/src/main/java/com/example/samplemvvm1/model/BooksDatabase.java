@@ -48,15 +48,15 @@ public abstract class BooksDatabase extends RoomDatabase {
 
             Category category1 = new Category();
             category1.setCategoryName("Text Books");
-            category1.setCategoryName("Text Books Description");
+            category1.setCategoryDescription("Text Books Description");
 
             Category category2 = new Category();
             category2.setCategoryName("Novels");
-            category2.setCategoryName("Novels Description");
+            category2.setCategoryDescription("Novels Description");
 
             Category category3 = new Category();
             category3.setCategoryName("Other Books");
-            category3.setCategoryName("Other Books Description");
+            category3.setCategoryDescription("Other Books Description");
 
             categoryDAO.insert(category1);
             categoryDAO.insert(category2);

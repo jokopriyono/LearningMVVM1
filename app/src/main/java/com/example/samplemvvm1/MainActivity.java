@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
                 for (Category c : categories) {
                     Log.d(this.getClass().getName(), c.getCategoryName());
                 }
+
+                showSpinner();
             }
         });
         mainActivityViewModel.getAllBooks(3).observe(this, new Observer<List<Book>>() {

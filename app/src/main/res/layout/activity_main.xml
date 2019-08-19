@@ -35,7 +35,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <include
-            android:id="secondary_layout"
+            android:id="@+id/secondary_layout"
             layout="@layout/content_main"
             bind:secondaryClickHandlers="@{clickHandlers}"
             bind:secondarySpinnerAdapter="@{spinnerAdapter}" />
